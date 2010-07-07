@@ -1,0 +1,6 @@
+Description:
+  Creates an sms notifier under app/notifiers
+
+Example:
+  rails g action_sms:notifier
+
