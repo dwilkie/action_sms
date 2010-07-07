@@ -5,14 +5,35 @@
 
 Gem::Specification.new do |s|
   s.name = %q{action_sms}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Wilkie"]
-  s.date = %q{2010-07-06}
+  s.date = %q{2010-07-07}
   s.email = %q{dwilkie@gmail.com}
+  s.extra_rdoc_files = [
+    "README.markdown"
+  ]
   s.files = [
-    "VERSION"
+    ".gitignore",
+     "MIT-LICENSE",
+     "README.markdown",
+     "Rakefile",
+     "VERSION",
+     "action_sms.gemspec",
+     "lib/action_sms.rb",
+     "lib/action_sms/base.rb",
+     "lib/action_sms/connection_adapters.rb",
+     "lib/action_sms/connection_adapters/abstract_adapter.rb",
+     "lib/action_sms/connections.rb",
+     "lib/action_sms/exceptions.rb",
+     "lib/generators/action_sms/initializer/USAGE",
+     "lib/generators/action_sms/initializer/initializer_generator.rb",
+     "lib/generators/action_sms/initializer/templates/action_sms.rb",
+     "lib/generators/action_sms/notifier/USAGE",
+     "lib/generators/action_sms/notifier/notifier_generator.rb",
+     "lib/generators/action_sms/notifier/templates/sms_notifier.rb",
+     "todo"
   ]
   s.homepage = %q{http://github.com/dwilkie/action_sms}
   s.rdoc_options = ["--charset=UTF-8"]
