@@ -1,8 +1,5 @@
 # see http://github.com/dwilkie/action_sms_gateways
-# for preconfigured sms gateways
-
-# see http://github.com/dwilkie/action_sms
-# for more details on how to make your own adapter for an sms gateway
+# for preconfigured sms gateways and more details on how to make your own adapter
 
 # Then uncomment the following code and replace :adapter with your adapter
 
