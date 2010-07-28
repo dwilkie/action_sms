@@ -1,2 +1,2 @@
-require 'connection_adapters/abstract_adapter'
+require 'action_sms/connection_adapters/abstract_adapter'
 
