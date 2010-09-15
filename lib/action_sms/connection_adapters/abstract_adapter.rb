@@ -35,12 +35,9 @@ module ActionSms #:nodoc:
             http.request(req)
           end
           @logger.info "Response: #{resp.body}" unless @logger.nil?
-
-          return resp.body
-        rescue Exception => e
-          raise e
+          resp.body
         end
-      end
+    end
   end
 end
 
