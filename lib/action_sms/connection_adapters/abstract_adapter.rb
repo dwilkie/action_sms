@@ -6,23 +6,8 @@ module ActionSms #:nodoc:
     # class.  You can use this interface directly by borrowing the gateway
     # connection from the Base with Base.connection.
     class AbstractAdapter
-
-      @logger = nil
-      attr_accessor :logger
-
-      def initialize(logger = nil) #:nodoc:
-        @logger = logger
-      end
-
-      def deliver(sms)
-      end
-
-      def parse(sms)
-        nil
-      end
-
       protected
-        # Helper method to send an HTTP request to +url+ with paramaters
+        # Helper method to send an HTTP POST request to +url+ with paramaters
         # specified by the +params+ hash.
         def send_http_request(url, params)
           uri = URI.parse(url)
@@ -34,7 +19,6 @@ module ActionSms #:nodoc:
           resp = http.start do
             http.request(req)
           end
-          @logger.info "Response: #{resp.body}" unless @logger.nil?
           resp.body
         end
     end
