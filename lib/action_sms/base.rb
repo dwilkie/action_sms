@@ -10,7 +10,7 @@ module ActionSms #:nodoc#
         return !@@connection.nil?
       end
 
-      # Returns the connection currently associated with the class.  This can
+      # Returns the connection currently associated with the class. This can
       # also be used to "borrow" the connection to do work that is specific to
       # a particular SMS gateway.
       def connection
@@ -40,7 +40,6 @@ module ActionSms #:nodoc#
       # The exceptions AdapterNotSpecified, AdapterNotFound, and ArgumentError
       # may be returned.
       def establish_connection(config)
-        config = config.symbolize_keys
         unless config.key?(:adapter)
           raise AdapterNotSpecified, "#{config} adapter is not configured"
         end
