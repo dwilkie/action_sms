@@ -9,10 +9,10 @@ module ActionSms #:nodoc:
       protected
         # Helper method to send an HTTP POST request to +url+ with paramaters
         # specified by the +params+ hash.
-        def send_http_request(url, params)
+        def send_http_request(url, data)
           uri = URI.parse(url)
           req = Net::HTTP::Post.new(uri.path)
-          req.set_form_data(params)
+          data.is_a?(Hash) ? req.set_form_data(data) : req.body = data
 
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = true if uri.scheme == 'https'
