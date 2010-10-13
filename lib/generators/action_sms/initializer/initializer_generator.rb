@@ -1,4 +1,3 @@
-require 'rails/generators'
 module ActionSms
   class InitializerGenerator < Rails::Generators::Base
 
