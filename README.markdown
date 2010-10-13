@@ -1,8 +1,9 @@
 # action_sms
 
-action_sms is a lightweight wrapper based on [activesms](http://github.com/nofxx/activesms). action_sms allows you to use existing SMS Gateway Adapters and switch between them effortlessly without modifing your application code. Unlike [activesms](http://github.com/nofxx/activesms), action_sms does not implement any SMS Gateway Adapters. For this see [action_sms_gateways](http://github.com/dwilkie/action_sms_gateways)
+action_sms allows you to use existing or custom SMS Gateway Adapters and switch between them effortlessly without modifying your application or test code. By keeping SMS Gateway configuration out of your code you can be more adaptable to change.
 
 ## Usage
+
 Establish a connection to your SMS Gateway Adapter:
 
     ActionSms::Base.establish_connection(
@@ -13,33 +14,31 @@ Establish a connection to your SMS Gateway Adapter:
     )
 The only required option is `:adapter`. This specifies the SMS Gateway adapter you want to use. The remaining options are specific to the adapter.
 
-Then subclass `ActionSms::Base` to define a notifier
+Now from your application or test code you can call methods on the adapter by calling:
 
-    class SMSNotifier < ActionSms::Base
-    end
+    ActionSms::Base.connection
 
-Now you can call:
+## Adapters
 
-    SMSNotifier.deliver(sms)
+See [action_sms_gateways](http://github.com/dwilkie/action_sms_gateways) for existing adapters and information on how to create your own.
 
-### Rails
-For convenience there are a couple of generators that can be used if you are using action_sms within a Rails app.
+## Rails
 
-    rails g initializer
+For convenience there is a generator that can be used if you are using action_sms within a Rails app
+
+    rails g action_sms:initializer
+
 Generates an initializer under config/initializers with the `establish_connection` code described above.
-
-    rails g notifier
-Generates a notifier under app/notifiers with the `SMSNotifier` code described above.
 
 ## Installation
 
     gem install action_sms
+
 ### Rails
+
 Place the following in your Gemfile:
 
     gem action_sms
-## SMS Gateway Adapters
-See [action_sms_gateways](http://github.com/dwilkie/action_sms_gateways)
 
 Copyright (c) 2010 David Wilkie, released under the MIT license
 
