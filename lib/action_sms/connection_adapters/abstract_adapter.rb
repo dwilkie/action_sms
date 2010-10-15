@@ -16,6 +16,7 @@ module ActionSms #:nodoc:
 
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = true if uri.scheme == 'https'
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
           resp = http.start do
             http.request(req)
           end
