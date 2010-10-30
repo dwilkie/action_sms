@@ -6,6 +6,39 @@ module ActionSms #:nodoc:
     # class.  You can use this interface directly by borrowing the gateway
     # connection from the Base with Base.connection.
     class AbstractAdapter
+      require 'uri'
+
+      def initialize(config = {}) #:nodoc:
+        @config = config
+      end
+
+      def authenticate(params)
+        params["authentication_key"] == @config[:authentication_key] ?
+          params.delete("authentication_key") : nil
+      end
+
+      def authenticiation_key
+        @config[:authentication_key]
+      end
+
+      def authentication_key=(value)
+        @config[:authentication_key] = value
+      end
+
+      def service_url(service_uri)
+        service_uri = URI.parse(service_uri)
+        service_uri.scheme = @config[:use_ssl] ? "https" : "http"
+        service_uri.to_s
+      end
+
+      def use_ssl
+        @config[:use_ssl]
+      end
+
+      def use_ssl=(value)
+        @config[:use_ssl] = value
+      end
+
       protected
         # Helper method to send an HTTP POST request to +url+ with paramaters
         # specified by the +params+ hash.
