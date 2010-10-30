@@ -17,12 +17,12 @@ module ActionSms #:nodoc:
           params.delete("authentication_key") : nil
       end
 
-      def authenticiation_key
-        @config[:authentication_key]
-      end
-
       def authentication_key=(value)
         @config[:authentication_key] = value
+      end
+
+      def authentication_key
+        @config[:authentication_key]
       end
 
       def service_url(service_uri)

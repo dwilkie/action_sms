@@ -3,6 +3,8 @@ require 'spec_helper'
 describe ActionSms::ConnectionAdapters::AbstractAdapter do
   let(:adapter) { ActionSms::ConnectionAdapters::AbstractAdapter.new }
 
+  # Interesting methods
+
   describe "#authenticate" do
     let (:request_params) { {} }
     context "the incoming message's 'authentication_key' query parameter value is the same as the adapter's authentication key" do
@@ -51,5 +53,20 @@ describe ActionSms::ConnectionAdapters::AbstractAdapter do
       end
     end
   end
+
+  describe "#authentication_key" do
+    it "should set the authentication key" do
+      adapter.authentication_key = "my_secret_key"
+      adapter.authentication_key.should == "my_secret_key"
+    end
+  end
+
+  describe "#use_ssl" do
+    it "it should use ssl" do
+      adapter.use_ssl = true
+      adapter.use_ssl.should == true
+    end
+  end
+
 end
 
