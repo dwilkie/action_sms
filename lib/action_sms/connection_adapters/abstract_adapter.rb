@@ -1,9 +1,9 @@
 require 'net/https'
 
-module ActionSms #:nodoc:
-  module ConnectionAdapters #:nodoc:
+module ActionSms
+  module ConnectionAdapters
     # All the concrete gateway adapters follow the interface laid down in this
-    # class.  You can use this interface directly by borrowing the gateway
+    # class. You can use this interface directly by borrowing the gateway
     # connection from the Base with Base.connection.
     class AbstractAdapter
       require 'uri'

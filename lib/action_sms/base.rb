@@ -24,7 +24,7 @@ module ActionSms #:nodoc#
         @@connection = spec
       end
 
-      # Establishes the connection to the SMS gateway.  Accepts a hash as input
+      # Establishes the connection to the SMS gateway. Accepts a hash as input
       # where the :adapter key must be specified with the name of a gateway
       # adapter (in lower-case)
       #
@@ -34,8 +34,6 @@ module ActionSms #:nodoc#
       #     :password => "mypassword"
       #     :api_id   => "myapiid"
       #   )
-      #
-      # Also accepts keys as strings (for parsing from YAML, for example).
       #
       # The exceptions AdapterNotSpecified, AdapterNotFound, and ArgumentError
       # may be returned.
