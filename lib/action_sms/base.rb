@@ -48,6 +48,64 @@ module ActionSms #:nodoc#
         end
         self.connection = self.send(adapter_method, config)
       end
+
+      def deliver(sms, options = {})
+        connection.deliver(sms, options)
+      end
+
+      def delivery_request_successful?(delivery_request)
+        connection.delivery_request_successful?(delivery_request)
+      end
+
+      def message_id(data)
+        adapter_method_result(:message_id, data)
+      end
+
+      def message_text(params)
+        adapter_method_result(:message_text, params)
+      end
+
+      def sender(params)
+        adapter_method_result(:sender, params)
+      end
+
+      def service_url
+        connection.service_url
+      end
+
+      def status(params)
+        adapter_method_result(:status, params)
+      end
+
+      private
+        def adapter_method_result(adapter_method, *args)
+          result = connection.call(adapter_method, *args)
+          unless result
+            gateway_adapters = adapters(adapter_method)
+            i = 0
+            adapter = nil
+            begin
+              adapter = gateway_adapters[i]
+              result = adapter.call(adapter_method, *args) if adapter
+              i += 1
+            end until result || adapter.nil?
+          end
+          result
+        end
+
+        def adapters(adapter_method)
+          adapters = []
+          instance_methods.each do |method|
+            if method.to_s =~ /\_connection$/
+              begin
+                adapter = call(method)
+              rescue
+              end
+              adapters << adapter if adapter && adapter.respond_to?(adapter_method)
+            end
+          end
+          adapters
+        end
     end
   end
 end

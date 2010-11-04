@@ -67,6 +67,5 @@ describe ActionSms::ConnectionAdapters::AbstractAdapter do
       adapter.use_ssl.should == true
     end
   end
-
 end
 
