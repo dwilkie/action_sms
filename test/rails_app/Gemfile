@@ -1,0 +1,17 @@
+source 'http://rubygems.org'
+
+gem 'rails', '3.0.0'
+
+# Bundle edge Rails instead:
+# gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'action_sms', :path => "/home/dave/work/plugins/action_sms"
+
+group :test do
+  gem "cucumber-rails"
+  gem "capybara"
+  gem "pickle"
+  gem "fakeweb"
+end
+
