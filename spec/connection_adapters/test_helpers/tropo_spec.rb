@@ -13,20 +13,12 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       adapter.should_not be_respond_to(:sample_configuration)
     end
 
-    it "should not respond to #sample_delivery_receipt" do
-      adapter.should_not be_respond_to(:sample_delivery_receipt)
-    end
-
     it "should not respond to #sample_delivery_response" do
       adapter.should_not be_respond_to(:sample_delivery_response)
     end
 
     it "should not respond to #sample_incoming_sms" do
       adapter.should_not be_respond_to(:sample_incoming_sms)
-    end
-
-    it "should not respond to #sample_message_id" do
-      adapter.should_not be_respond_to(:sample_message_id)
     end
   end
 
@@ -57,46 +49,6 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
             adapter.sample_configuration(
               :authentication_key => true
             ).should include(:authentication_key)
-          end
-        end
-      end
-    end
-
-    describe "#sample_delivery_receipt" do
-      context "with no options" do
-        it "should return the default values" do
-          adapter.sample_delivery_receipt.should include(
-            "message_id", "status", "delivered_at"
-          )
-        end
-      end
-      context "with options" do
-        context "'message_id'" do
-          it "should include the option" do
-            adapter.sample_delivery_receipt(
-              :message_id => "12345"
-            ).should include("message_id" => "12345")
-          end
-        end
-        context "'error'" do
-          it "should include the option" do
-            adapter.sample_delivery_receipt(
-              :error => "some error"
-            ).should include("error" => "some error")
-          end
-        end
-        context "'status'" do
-          it "should include the option" do
-            adapter.sample_delivery_receipt(
-              :status => "no good"
-            ).should include("status" => "no good")
-          end
-        end
-        context "'date'" do
-          it "should include the option" do
-            adapter.sample_delivery_receipt(
-              :date => "today"
-            ).should include("delivered_at" => "today")
           end
         end
       end
@@ -174,21 +126,6 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
             session.should include(
               "timestamp" => "today"
             )
-          end
-        end
-      end
-    end
-
-    describe "#sample_message_id" do
-      context "with no options" do
-        it "should return a default message id" do
-          adapter.sample_message_id.should == "123e71195545ad204bdd99f2070a7d86"
-        end
-      end
-      context "with options" do
-        context "'message_id'" do
-          it "should include the option" do
-            adapter.sample_message_id(:message_id => "12345").should == "12345"
           end
         end
       end

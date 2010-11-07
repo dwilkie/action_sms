@@ -2,8 +2,6 @@ module ActionSms
   module ConnectionAdapters
     module TestHelpers
       module Tropo
-        # This is here as a placeholder
-        # Tropo does not *yet* send delivery receipts
 
         def sample_configuration(options = {})
           config = {
@@ -14,19 +12,6 @@ module ActionSms
             :authentication_key => "My Unique Authentication Key"
           ) if options[:authentication_key]
           config
-        end
-
-        def sample_delivery_receipt(options = {})
-          options[:message_id] ||= "123e71195545ad204bdd99f2070a7d86"
-          options[:error]  ||= "None"
-          options[:status] ||= "delivered"
-          options[:date]   ||= "Mon Oct 11 09:21:38 UTC 2010"
-          {
-            "message_id"=> options[:message_id],
-            "error" => options[:error],
-            "status"=> options[:status],
-            "delivered_at"=> options[:date]
-          }
         end
 
         def sample_delivery_response(options = {})
@@ -74,13 +59,6 @@ module ActionSms
           }
           params.merge!("authentication_key" => @config[:authentication_key]) unless options[:authentic] == false
           params
-        end
-
-        # This is here as a placeholder
-        # Tropo does not *yet* return message ids
-        def sample_message_id(options = {})
-          options[:message_id] ||= "123e71195545ad204bdd99f2070a7d86"
-          options[:message_id]
         end
       end
     end
