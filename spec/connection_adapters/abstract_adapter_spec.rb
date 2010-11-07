@@ -41,6 +41,13 @@ describe ActionSms::ConnectionAdapters::AbstractAdapter do
     end
   end
 
+  describe "#configuration" do
+    it "should set the configuration" do
+      adapter.configuration = {:config_key => "some config value"}
+      adapter.configuration.should == {:config_key => "some config value"}
+    end
+  end
+
   describe "#use_ssl" do
     it "it should use ssl" do
       adapter.use_ssl = true

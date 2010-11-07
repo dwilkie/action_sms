@@ -25,6 +25,14 @@ module ActionSms
         @config[:authentication_key]
       end
 
+      def configuration
+        @config
+      end
+
+      def configuration=(value)
+        @config = value
+      end
+
       def use_ssl
         @config[:use_ssl]
       end

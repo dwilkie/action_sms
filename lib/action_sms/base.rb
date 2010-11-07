@@ -101,20 +101,24 @@ module ActionSms #:nodoc#
 
       # Test Helper Methods
 
-      def sample_incoming_sms(options = {})
-        connection.sample_incoming_sms(options)
+      def sample_configuration(options = {})
+        connection.sample_configuration(options)
+      end
+
+      def sample_delivery_receipt(options = {})
+        connection.sample_delivery_receipt(options)
       end
 
       def sample_delivery_response(options = {})
         connection.sample_delivery_response(options)
       end
 
-      def sample_message_id(options = {})
-        connection.sample_message_id(options)
+      def sample_incoming_sms(options = {})
+        connection.sample_incoming_sms(options)
       end
 
-      def sample_delivery_receipt(options = {})
-        connection.sample_delivery_receipt(options)
+      def sample_message_id(options = {})
+        connection.sample_message_id(options)
       end
 
       private

@@ -319,18 +319,35 @@ describe ActionSms::Base do
     end
 
     # Test Helper Methods
-    describe "#sample_incoming_sms" do
-      it "should call 'sample_incoming_sms' on the connection" do
-        active_concrete_adapter.should_receive(:sample_incoming_sms)
-        ActionSms::Base.sample_incoming_sms
+
+    describe "#sample_configuration" do
+      it "should call 'sample_configuration' on the connection" do
+        active_concrete_adapter.should_receive(:sample_configuration)
+        ActionSms::Base.sample_configuration
       end
       context "with options" do
         it "should pass on the options" do
           options = {:my_option => "12345"}
           active_concrete_adapter.should_receive(
-            :sample_incoming_sms
+            :sample_configuration
           ).with(options)
-          ActionSms::Base.sample_incoming_sms(options)
+          ActionSms::Base.sample_configuration(options)
+        end
+      end
+    end
+
+    describe "#sample_delivery_receipt" do
+      it "should call 'sample_delivery_receipt' on the connection" do
+        active_concrete_adapter.should_receive(:sample_delivery_receipt)
+        ActionSms::Base.sample_delivery_receipt
+      end
+      context "with options" do
+        it "should pass on the options" do
+          options = {:my_option => "12345"}
+          active_concrete_adapter.should_receive(
+            :sample_delivery_receipt
+          ).with(options)
+          ActionSms::Base.sample_delivery_receipt(options)
         end
       end
     end
@@ -351,6 +368,22 @@ describe ActionSms::Base do
       end
     end
 
+    describe "#sample_incoming_sms" do
+      it "should call 'sample_incoming_sms' on the connection" do
+        active_concrete_adapter.should_receive(:sample_incoming_sms)
+        ActionSms::Base.sample_incoming_sms
+      end
+      context "with options" do
+        it "should pass on the options" do
+          options = {:my_option => "12345"}
+          active_concrete_adapter.should_receive(
+            :sample_incoming_sms
+          ).with(options)
+          ActionSms::Base.sample_incoming_sms(options)
+        end
+      end
+    end
+
     describe "#sample_message_id" do
       it "should call 'sample_message_id' on the connection" do
         active_concrete_adapter.should_receive(:sample_message_id)
@@ -363,22 +396,6 @@ describe ActionSms::Base do
             :sample_message_id
           ).with(options)
           ActionSms::Base.sample_message_id(options)
-        end
-      end
-    end
-
-    describe "#sample_delivery_receipt" do
-      it "should call 'sample_delivery_receipt' on the connection" do
-        active_concrete_adapter.should_receive(:sample_delivery_receipt)
-        ActionSms::Base.sample_delivery_receipt
-      end
-      context "with options" do
-        it "should pass on the options" do
-          options = {:my_option => "12345"}
-          active_concrete_adapter.should_receive(
-            :sample_delivery_receipt
-          ).with(options)
-          ActionSms::Base.sample_delivery_receipt(options)
         end
       end
     end
