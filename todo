@@ -1,3 +1,4 @@
-Merge action_sms_gateways with this project
-Extract all methods out into ActionSms::Base
+Modify code in Base to find complient gateway for delivery receipts and message ids
+Fix Readme
+Write more info on wiki pages for adapters on how to get started
 
