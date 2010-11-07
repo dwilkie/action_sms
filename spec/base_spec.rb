@@ -75,6 +75,59 @@ describe ActionSms::Base do
       ).and_return(another_concrete_adapter)
     end
 
+    describe "#authenticate" do
+      before do
+        active_concrete_adapter.stub!(:send).with(
+          :authenticate, *anything
+        )
+      end
+      context "active connection authenticates the message" do
+        before do
+          active_concrete_adapter.should_receive(:send).with(
+            :authenticate, *anything
+          ).and_return("something")
+        end
+        it "should return the active connection's response" do
+          ActionSms::Base.authenticate("anything").should == "something"
+        end
+      end
+
+      context "another adapter authenticates the message" do
+        before do
+          another_concrete_adapter.stub!(:send).with(
+            :authenticate, *anything
+           ).and_return("something else")
+          another_concrete_adapter.stub!(:authenticate)
+        end
+
+        it "should return the other adapter's response" do
+          ActionSms::Base.authenticate("anything").should == "something else"
+        end
+      end
+
+      context "no adapters authenticate the message" do
+        it "should return nil" do
+          ActionSms::Base.authenticate("anything").should be_nil
+        end
+      end
+    end
+
+    describe "#authentication_key" do
+      it "should call 'authentication_key' on the connection" do
+        active_concrete_adapter.should_receive(:authentication_key)
+        ActionSms::Base.authentication_key
+      end
+    end
+
+    describe "#authentication_key=" do
+      it "should call 'authentication_key=' on the connection" do
+        active_concrete_adapter.should_receive(
+          :authentication_key=
+        ).with("something")
+        ActionSms::Base.authentication_key = "something"
+      end
+    end
+
     describe "#deliver" do
       it "should call 'deliver' on the connection" do
         sms = mock("sms")
@@ -207,7 +260,6 @@ describe ActionSms::Base do
 
     describe "#service_url" do
       it "should call 'service_url' on the connection" do
-        url = "http://someurl.com"
         active_concrete_adapter.should_receive(:service_url)
         ActionSms::Base.service_url
       end
@@ -246,6 +298,22 @@ describe ActionSms::Base do
       context "no adapters return the status" do
         it "should return nil" do
           ActionSms::Base.status("anything").should be_nil
+        end
+      end
+
+      describe "#use_ssl" do
+        it "should call 'use_ssl' on the connection" do
+          active_concrete_adapter.should_receive(:use_ssl)
+          ActionSms::Base.use_ssl
+        end
+      end
+
+      describe "#use_ssl=" do
+        it "should call 'use_ssl=' on the connection" do
+          active_concrete_adapter.should_receive(
+            :use_ssl=
+          ).with("something")
+          ActionSms::Base.use_ssl = "something"
         end
       end
     end

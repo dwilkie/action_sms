@@ -168,8 +168,24 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
   end
 
   describe "#service_url" do
-    it "should be the tropo sessions url" do
+    it "should be the Tropo service url" do
       adapter.service_url.should == "http://api.tropo.com/1.0/sessions"
+    end
+    context "#use_ssl=false" do
+      before do
+        adapter.use_ssl = false
+      end
+      it "should be 'http'" do
+        URI.parse(adapter.service_url).scheme.should == "http"
+      end
+    end
+    context "#use_ssl=true" do
+      before do
+        adapter.use_ssl = true
+      end
+      it "should be 'https'" do
+        URI.parse(adapter.service_url).scheme.should == "https"
+      end
     end
   end
 

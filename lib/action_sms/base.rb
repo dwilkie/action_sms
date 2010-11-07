@@ -51,6 +51,18 @@ module ActionSms #:nodoc#
 
       # Adapter Helper Methods
 
+      def authenticate(params)
+        adapter_method_result(:authenticate, params)
+      end
+
+      def authentication_key
+        connection.authentication_key
+      end
+
+      def authentication_key=(value)
+        connection.authentication_key = value
+      end
+
       def deliver(sms, options = {})
         connection.deliver(sms, options)
       end
@@ -77,6 +89,14 @@ module ActionSms #:nodoc#
 
       def status(params)
         adapter_method_result(:status, params)
+      end
+
+      def use_ssl
+        connection.use_ssl
+      end
+
+      def use_ssl=(value)
+        connection.use_ssl = value
       end
 
       # Test Helper Methods

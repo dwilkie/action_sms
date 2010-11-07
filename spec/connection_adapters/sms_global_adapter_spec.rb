@@ -221,6 +221,22 @@ describe ActionSms::ConnectionAdapters::SMSGlobalAdapter do
     it "should be the SMS Global service url" do
       adapter.service_url.should == "http://smsglobal.com.au/http-api.php"
     end
+    context "#use_ssl=false" do
+      before do
+        adapter.use_ssl = false
+      end
+      it "should be 'http'" do
+        URI.parse(adapter.service_url).scheme.should == "http"
+      end
+    end
+    context "#use_ssl=true" do
+      before do
+        adapter.use_ssl = true
+      end
+      it "should be 'https'" do
+        URI.parse(adapter.service_url).scheme.should == "https"
+      end
+    end
   end
 
   describe "#status" do

@@ -25,12 +25,6 @@ module ActionSms
         @config[:authentication_key]
       end
 
-      def service_url(service_uri)
-        service_uri = URI.parse(service_uri)
-        service_uri.scheme = @config[:use_ssl] ? "https" : "http"
-        service_uri.to_s
-      end
-
       def use_ssl
         @config[:use_ssl]
       end
@@ -54,6 +48,12 @@ module ActionSms
             http.request(req)
           end
           resp.body
+        end
+
+        def service_url(service_uri)
+          service_uri = URI.parse(service_uri)
+          service_uri.scheme = @config[:use_ssl] ? "https" : "http"
+          service_uri.to_s
         end
     end
   end
