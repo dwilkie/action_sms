@@ -2,6 +2,15 @@ require 'spec_helper'
 
 describe ActionSms::Base do
 
+  describe "#connection" do
+    it "should set the connection" do
+      adapter = mock("adapter")
+      ActionSms::Base.connection = adapter
+      ActionSms::Base.connection.should == adapter
+      ActionSms::Base.should be_connected
+    end
+  end
+
   describe "#establish_connection" do
     context "adapter is specified in the configuration" do
       let (:adapter_name) { "my_adapter" }
@@ -61,7 +70,7 @@ describe ActionSms::Base do
         :instance_methods
       ).and_return([:another_concrete_adapter_connection])
 
-      ActionSms::Base.stub!(:call).with(
+      ActionSms::Base.stub!(:send).with(
         :another_concrete_adapter_connection
       ).and_return(another_concrete_adapter)
     end
@@ -85,23 +94,15 @@ describe ActionSms::Base do
       end
     end
 
-    describe "#service_url" do
-      it "should call 'service_url' on the connection" do
-        url = "http://omeurl.com"
-        active_concrete_adapter.should_receive(:service_url)
-        ActionSms::Base.service_url
-      end
-    end
-
     describe "#message_id" do
       before do
-        active_concrete_adapter.stub!(:call).with(
+        active_concrete_adapter.stub!(:send).with(
           :message_id, *anything
         )
       end
       context "active connection returns the message id" do
         before do
-          active_concrete_adapter.should_receive(:call).with(
+          active_concrete_adapter.should_receive(:send).with(
             :message_id, *anything
           ).and_return("something")
         end
@@ -112,7 +113,7 @@ describe ActionSms::Base do
 
       context "another adapter returns the message id" do
         before do
-          another_concrete_adapter.stub!(:call).with(
+          another_concrete_adapter.stub!(:send).with(
             :message_id, *anything
            ).and_return("something else")
           another_concrete_adapter.stub!(:message_id)
@@ -132,13 +133,13 @@ describe ActionSms::Base do
 
     describe "#message_text" do
       before do
-        active_concrete_adapter.stub!(:call).with(
+        active_concrete_adapter.stub!(:send).with(
           :message_text, *anything
         )
       end
       context "active connection returns the message text" do
         before do
-          active_concrete_adapter.should_receive(:call).with(
+          active_concrete_adapter.should_receive(:send).with(
             :message_text, *anything
           ).and_return("something")
         end
@@ -149,7 +150,7 @@ describe ActionSms::Base do
 
       context "another adapter returns the message text" do
         before do
-          another_concrete_adapter.stub!(:call).with(
+          another_concrete_adapter.stub!(:send).with(
             :message_text, *anything
            ).and_return("something else")
           another_concrete_adapter.stub!(:message_text)
@@ -169,13 +170,13 @@ describe ActionSms::Base do
 
     describe "#sender" do
       before do
-        active_concrete_adapter.stub!(:call).with(
+        active_concrete_adapter.stub!(:send).with(
           :sender, *anything
         )
       end
       context "active connection returns the sender" do
         before do
-          active_concrete_adapter.should_receive(:call).with(
+          active_concrete_adapter.should_receive(:send).with(
             :sender, *anything
           ).and_return("something")
         end
@@ -186,7 +187,7 @@ describe ActionSms::Base do
 
       context "another adapter returns the sender" do
         before do
-          another_concrete_adapter.stub!(:call).with(
+          another_concrete_adapter.stub!(:send).with(
             :sender, *anything
            ).and_return("something else")
           another_concrete_adapter.stub!(:sender)
@@ -204,15 +205,23 @@ describe ActionSms::Base do
       end
     end
 
+    describe "#service_url" do
+      it "should call 'service_url' on the connection" do
+        url = "http://someurl.com"
+        active_concrete_adapter.should_receive(:service_url)
+        ActionSms::Base.service_url
+      end
+    end
+
     describe "#status" do
       before do
-        active_concrete_adapter.stub!(:call).with(
+        active_concrete_adapter.stub!(:send).with(
           :status, *anything
         )
       end
       context "active connection returns the status" do
         before do
-          active_concrete_adapter.should_receive(:call).with(
+          active_concrete_adapter.should_receive(:send).with(
             :status, *anything
           ).and_return("something")
         end
@@ -223,7 +232,7 @@ describe ActionSms::Base do
 
       context "another adapter returns the sender" do
         before do
-          another_concrete_adapter.stub!(:call).with(
+          another_concrete_adapter.stub!(:send).with(
             :status, *anything
            ).and_return("something else")
           another_concrete_adapter.stub!(:status)
@@ -240,14 +249,70 @@ describe ActionSms::Base do
         end
       end
     end
-  end
 
-  describe "#connection" do
-    it "should set the connection" do
-      adapter = mock("adapter")
-      ActionSms::Base.connection = adapter
-      ActionSms::Base.connection.should == adapter
-      ActionSms::Base.should be_connected
+    # Test Helper Methods
+    describe "#sample_incoming_sms" do
+      it "should call 'sample_incoming_sms' on the connection" do
+        active_concrete_adapter.should_receive(:sample_incoming_sms)
+        ActionSms::Base.sample_incoming_sms
+      end
+      context "with options" do
+        it "should pass on the options" do
+          options = {:my_option => "12345"}
+          active_concrete_adapter.should_receive(
+            :sample_incoming_sms
+          ).with(options)
+          ActionSms::Base.sample_incoming_sms(options)
+        end
+      end
+    end
+
+    describe "#sample_delivery_response" do
+      it "should call 'sample_delivery_response' on the connection" do
+        active_concrete_adapter.should_receive(:sample_delivery_response)
+        ActionSms::Base.sample_delivery_response
+      end
+      context "with options" do
+        it "should pass on the options" do
+          options = {:my_option => "12345"}
+          active_concrete_adapter.should_receive(
+            :sample_delivery_response
+          ).with(options)
+          ActionSms::Base.sample_delivery_response(options)
+        end
+      end
+    end
+
+    describe "#sample_message_id" do
+      it "should call 'sample_message_id' on the connection" do
+        active_concrete_adapter.should_receive(:sample_message_id)
+        ActionSms::Base.sample_message_id
+      end
+      context "with options" do
+        it "should pass on the options" do
+          options = {:my_option => "12345"}
+          active_concrete_adapter.should_receive(
+            :sample_message_id
+          ).with(options)
+          ActionSms::Base.sample_message_id(options)
+        end
+      end
+    end
+
+    describe "#sample_delivery_receipt" do
+      it "should call 'sample_delivery_receipt' on the connection" do
+        active_concrete_adapter.should_receive(:sample_delivery_receipt)
+        ActionSms::Base.sample_delivery_receipt
+      end
+      context "with options" do
+        it "should pass on the options" do
+          options = {:my_option => "12345"}
+          active_concrete_adapter.should_receive(
+            :sample_delivery_receipt
+          ).with(options)
+          ActionSms::Base.sample_delivery_receipt(options)
+        end
+      end
     end
   end
 end
