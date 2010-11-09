@@ -106,7 +106,7 @@ module ActionSms #:nodoc#
       end
 
       def sample_delivery_receipt(options = {})
-        connection.sample_delivery_receipt(options)
+        adapter_method_result(:sample_delivery_receipt, options)
       end
 
       def sample_delivery_response(options = {})
@@ -114,16 +114,18 @@ module ActionSms #:nodoc#
       end
 
       def sample_incoming_sms(options = {})
-        connection.sample_incoming_sms(options)
+        adapter_method_result(:sample_incoming_sms, options)
       end
 
       def sample_message_id(options = {})
-        connection.sample_message_id(options)
+        adapter_method_result(:sample_message_id, options)
       end
 
       private
         def adapter_method_result(adapter_method, *args)
-          result = connection.send(adapter_method, *args)
+          result = connection.send(
+            adapter_method, *args
+          ) if connection.respond_to?(adapter_method)
           unless result
             gateway_adapters = adapters(adapter_method)
             i = 0
