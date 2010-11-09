@@ -35,6 +35,11 @@ module ActionSms
           options[:failed] ? "ERROR: No action requested" : "OK: 0; Sent queued message ID: 86b1a945370734f4 #{sample_message_id(:message_id => options[:message_id])}"
         end
 
+        def sample_delivery_response_with_message_id(message_id, options = {})
+          options.merge!(:message_id => message_id)
+          sample_delivery_response(options)
+        end
+
         def sample_incoming_sms(options = {})
           options[:message] ||= "Endia kasdf ofeao"
           options[:to]      ||= "61447100308"

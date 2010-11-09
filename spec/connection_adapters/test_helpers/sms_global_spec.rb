@@ -21,6 +21,10 @@ describe ActionSms::ConnectionAdapters::SMSGlobalAdapter do
       adapter.should_not be_respond_to(:sample_delivery_response)
     end
 
+    it "should not respond to #sample_delivery_response_with_message_id" do
+      adapter.should_not be_respond_to(:sample_delivery_response_with_message_id)
+    end
+
     it "should not respond to #sample_incoming_sms" do
       adapter.should_not be_respond_to(:sample_incoming_sms)
     end
@@ -109,16 +113,28 @@ describe ActionSms::ConnectionAdapters::SMSGlobalAdapter do
         end
       end
       context "with options" do
-        context "'failed'" do
+        context ":failed => true" do
           it "should return a failed delivery response" do
             adapter.sample_delivery_response(:failed => true).should == "ERROR: No action requested"
           end
         end
-        context "'message_id'" do
+        context "'message_id' => 'anything'" do
           it "should include the option" do
             adapter.sample_delivery_response(:message_id => "12345").should =~ /SMSGlobalMsgID:12345/
           end
         end
+      end
+    end
+
+    describe "#sample_delivery_response_with_message_id" do
+      it "should call sample_delivery_response with the message id" do
+        options = {:my_option => "some option"}
+        adapter.should_receive(:sample_message_id).with(
+          hash_including(:message_id => "12345")
+        )
+        adapter.sample_delivery_response_with_message_id(
+          "12345", options
+        )
       end
     end
 

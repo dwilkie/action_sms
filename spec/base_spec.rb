@@ -417,6 +417,60 @@ describe ActionSms::Base do
       end
     end
 
+    describe "#sample_delivery_response_with_message_id" do
+      shared_examples_for "another adapter's sample_delivery_response_with_message_id" do
+        context "but another adapter responds to 'sample_delivery_response_with_message_id'" do
+          before do
+            another_adapter.stub!(:sample_delivery_response_with_message_id)
+          end
+          context "and returns one" do
+            before do
+              another_adapter.stub!(
+                :sample_delivery_response_with_message_id
+              ).and_return("something else")
+            end
+            it "should return the other adapter's response" do
+              ActionSms::Base.sample_delivery_response_with_message_id("12345") == "something else"
+            end
+          end
+          context "but also returns nil" do
+            it "should return nil" do
+              ActionSms::Base.sample_delivery_response_with_message_id("12345").should be_nil
+            end
+          end
+        end
+        context "and no other adapter responds to 'sample_delivery_response_with_message_id'" do
+          it "should return nil" do
+            ActionSms::Base.sample_delivery_response_with_message_id("12345").should be_nil
+          end
+        end
+      end
+      context "active connection responds to 'sample_delivery_response_with_message_id'" do
+        before do
+          active_adapter.stub!(:sample_delivery_response_with_message_id)
+        end
+        context "and returns a sample delivery response with message id" do
+          before do
+            active_adapter.stub!(
+              :sample_delivery_response_with_message_id
+            ).and_return("something")
+          end
+          it "should return the active connection's response" do
+            ActionSms::Base.sample_delivery_response_with_message_id("12345").should == "something"
+          end
+        end
+        context "but returns nil" do
+          before do
+            active_adapter.stub!(:sample_delivery_response_with_message_id)
+          end
+          it_behaves_like "another adapter's sample_delivery_response_with_message_id"
+        end
+      end
+      context "active connection does not respond to 'sample_delivery_response_with_message_id'" do
+        it_behaves_like "another adapter's sample_delivery_response_with_message_id"
+      end
+    end
+
     describe "#sample_incoming_sms" do
       shared_examples_for "another adapter's sample_incoming_sms" do
         context "but another adapter responds to 'sample_incoming_sms'" do

@@ -113,6 +113,12 @@ module ActionSms #:nodoc#
         connection.sample_delivery_response(options)
       end
 
+      def sample_delivery_response_with_message_id(message_id, options = {})
+        adapter_method_result(
+          :sample_delivery_response_with_message_id, message_id, options
+        )
+      end
+
       def sample_incoming_sms(options = {})
         adapter_method_result(:sample_incoming_sms, options)
       end
