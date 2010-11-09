@@ -147,10 +147,10 @@ module ActionSms #:nodoc#
 
         def adapters(adapter_method)
           adapters = []
-          instance_methods.each do |method|
+          methods.each do |method|
             if method.to_s =~ /\_connection$/
               begin
-                adapter = send(method)
+                adapter = send(method, connection.configuration)
               rescue
               end
               adapters << adapter if adapter && adapter.respond_to?(adapter_method)

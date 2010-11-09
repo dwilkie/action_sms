@@ -67,12 +67,14 @@ describe ActionSms::Base do
       ).and_return(active_adapter)
 
       ActionSms::Base.stub!(
-        :instance_methods
+        :methods
       ).and_return([:another_adapter_connection])
 
       ActionSms::Base.stub!(
         :another_adapter_connection
       ).and_return(another_adapter)
+
+      active_adapter.stub!(:configuration)
     end
 
     describe "#authenticate" do
