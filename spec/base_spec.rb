@@ -2,6 +2,70 @@ require 'spec_helper'
 
 describe ActionSms::Base do
 
+  describe "#adapters" do
+    let(:adapter) {mock "gateway_adapter"}
+    before do
+      ActionSms::Base.stub!(:methods).and_return(
+        [:gateway_adapter_connection]
+      )
+      ActionSms::Base.stub!(:gateway_adapter_connection).and_return(adapter)
+    end
+    context "an adapter responds to 'adapter_method'" do
+      before do
+        adapter.stub!(:adapter_method)
+      end
+      it "should include the adapter" do
+        ActionSms::Base.adapters(
+          :adapter_method
+        ).should include(adapter)
+      end
+      context "config = {}" do
+        context "and there's a current connection" do
+          before do
+            ActionSms::Base.stub!(:connected?).and_return(true)
+          end
+          let(:active_adapter_config) { {:adapter_name => "some_adapter"} }
+          before do
+            ActionSms::Base.stub!(:connection).and_return(mock(
+              "active_adapter",
+              :configuration => active_adapter_config
+            ))
+          end
+          it "should set the adapter's config to that of the current connection's" do
+            ActionSms::Base.should_receive(
+              :gateway_adapter_connection
+            ).with(active_adapter_config)
+            ActionSms::Base.adapters(:adapter_method)
+          end
+        end
+        context "but there's no current connection" do
+          it "should set the adapter's config to: '{}'" do
+            ActionSms::Base.should_receive(
+              :gateway_adapter_connection
+            ).with({})
+            ActionSms::Base.adapters(:adapter_method)
+          end
+        end
+      end
+      context "config = {:some_config => 'something'}" do
+        let(:config) { {:some_config => 'something'} }
+        it "should set the adapter's config to the passed in config" do
+          ActionSms::Base.should_receive(
+            :gateway_adapter_connection
+          ).with(config)
+          ActionSms::Base.adapters(:adapter_method, config)
+        end
+      end
+    end
+    context "an adapter does not respond to 'adapter_method'" do
+      it "should not include the adapter" do
+        ActionSms::Base.adapters(
+          :adapter_method
+        ).should_not include(:adapter)
+      end
+    end
+  end
+
   describe "#connection" do
     it "should set the connection" do
       adapter = mock("adapter")

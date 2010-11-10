@@ -5,8 +5,8 @@ module ActionSms
        @source_root ||= File.join(File.dirname(__FILE__), 'templates')
     end
 
-    def copy_conversation_file
-      copy_file "action_sms.rb", "config/initializers/action_sms.rb"
+    def copy_initializer
+      template "action_sms.rb", "config/initializers/action_sms.rb"
     end
   end
 end

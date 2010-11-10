@@ -4,6 +4,22 @@ module ActionSms #:nodoc#
     @@connection = nil
 
     class << self
+      # Returns all adapters that respond to the given method
+      def adapters(adapter_method, config = {})
+        config = connection.configuration if config.empty? && connected?
+        adapters = []
+        methods.each do |method|
+          if method.to_s =~ /\_connection$/
+            begin
+              adapter = send(method, config)
+            rescue
+            end
+            adapters << adapter if adapter && adapter.respond_to?(adapter_method)
+          end
+        end
+        adapters
+      end
+
       # Returns true if a connection that's accessible to this class has already
       # been opened.
       def connected?
@@ -143,20 +159,6 @@ module ActionSms #:nodoc#
             end until result || adapter.nil?
           end
           result
-        end
-
-        def adapters(adapter_method)
-          adapters = []
-          methods.each do |method|
-            if method.to_s =~ /\_connection$/
-              begin
-                adapter = send(method, connection.configuration)
-              rescue
-              end
-              adapters << adapter if adapter && adapter.respond_to?(adapter_method)
-            end
-          end
-          adapters
         end
     end
   end
