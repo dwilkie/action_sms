@@ -3,21 +3,8 @@
 
 # Built In Adapters
 
-<% ActionSms::Base.adapters(:sample_configuration, :environment => "test").each do |adapter| -%>
-<% config =  adapter.sample_configuration -%>
-<%= "## #{config[:adapter].titleize}" %>
+<%= built_in_adapter_configurations %>
 
-# ActionSms::Base.establish_connection(
-<% config.each do |key, value| -%>
-<% output = "#   :#{key} => \"#{value}\"" -%>
-<% unless config.keys.last == key -%>
-<% output << "," -%>
-<% end -%>
-<%= output %>
-<% end -%>
-# )
-
-<% end -%>
 # Custom Adapters
 
 # ActionSms::Base.establish_connection(
