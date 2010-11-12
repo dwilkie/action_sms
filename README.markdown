@@ -161,7 +161,7 @@ For convenience there is a generator that can be used if you are using action_sm
 
     rails g action_sms:initializer
 
-Generates an initializer under config/initializers with the `establish_connection` code described above.
+Generates an initializer including example configuration for built-in adapters
 
 ## Installation
 
