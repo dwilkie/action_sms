@@ -3,9 +3,14 @@ require 'spec_helper'
 describe ActionSms::ConnectionAdapters::TropoAdapter do
   let(:adapter) { ActionSms::ConnectionAdapters::TropoAdapter.new }
 
+  def response(success = true)
+    success ?
+    "success=true&token=abcde3214&id=9865abcde" :
+    "success=false&token=abcde3214&reason=Invalid+token"
+  end
+
   describe "#deliver" do
     let(:sms) { mock("sms").as_null_object }
-    let(:response) { "<session><success>true</success><token>my_secret_token</token></session>" }
     before do
       adapter.stub!(:send_http_request).and_return(response)
     end
@@ -25,7 +30,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       )
       adapter.should_receive(:send_http_request).with(
         anything,
-        /my_token/
+        hash_including("token" => "my_token")
       )
       adapter.deliver(sms)
     end
@@ -34,7 +39,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       sms.stub!(:recipient).and_return("somebody")
       adapter.should_receive(:send_http_request).with(
         anything,
-        /somebody/
+        hash_including("to" => "somebody")
       )
       adapter.deliver(sms)
     end
@@ -47,7 +52,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       it "should try to send the sms with the sms' body" do
         adapter.should_receive(:send_http_request).with(
           anything,
-          /something/
+          hash_including("text" => "something")
         )
         adapter.deliver(sms)
       end
@@ -61,7 +66,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       it "should try to send the sms with blank text" do
         adapter.should_receive(:send_http_request).with(
           anything,
-          /text/
+          hash_including("text" => "")
         )
         adapter.deliver(sms)
       end
@@ -74,7 +79,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       it "should try to send the sms with the result from 'sms#from'" do
         adapter.should_receive(:send_http_request).with(
           anything,
-          /anybody/
+          hash_including("from" => "anybody")
         )
         adapter.deliver(sms)
       end
@@ -87,7 +92,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       it "should try to send the sms without 'from'" do
         adapter.should_receive(:send_http_request).with(
           anything,
-          /^((?!from).)*$/
+          hash_not_including("from")
         )
         adapter.deliver(sms)
       end
@@ -97,7 +102,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       it "should not return the token" do
         adapter.deliver(
           sms, :filter_response => true
-        ).should == "<session><success>true</success></session>"
+        ).should == "success=true&id=9865abcde"
       end
     end
 
@@ -113,14 +118,14 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
   describe "#delivery_request_successful?" do
     context "the gateway response was successful" do
       let (:delivery_response) {
-        "<session><success>true</success></session>"
+        response
       }
       it "should not return nil" do
         adapter.delivery_request_successful?(delivery_response).should_not be_nil
       end
     end
     context "the gateway response was not successful" do
-      let (:delivery_response) { "<session><success>false</success><token></token><reason>FAILED TO ROUTE TOKEN</reason></session>" }
+      let (:delivery_response) { response(false) }
       it "should return nil" do
         adapter.delivery_request_successful?(delivery_response).should be_nil
       end
@@ -128,8 +133,17 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
   end
 
   describe "#message_id" do
-    it "should return nil" do
-      adapter.message_id("any text").should be_nil
+    context "the gateway response was successful" do
+      let(:delivery_response) { response }
+      it "should return the id" do
+        adapter.message_id(delivery_response).should == "9865abcde"
+      end
+    end
+    context "the gateway response was not successful" do
+      let(:delivery_response) { response(false) }
+      it "should return nil" do
+        adapter.message_id(delivery_response).should be_nil
+      end
     end
   end
 

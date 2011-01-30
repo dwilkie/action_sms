@@ -22,6 +22,7 @@ module ActionSms
     # connection from the Base with Base.connection.
     class TropoAdapter < AbstractAdapter
       require 'tropo_message'
+      require 'rack'
 
       SERVICE_URL = "http://api.tropo.com/1.0/sessions"
 
@@ -31,16 +32,18 @@ module ActionSms
         tropo_message.text = sms.body || ""
         tropo_message.from = sms.from if sms.respond_to?(:from)
         tropo_message.token = @config[:outgoing_token]
-        response = send_http_request(service_url, tropo_message.request_xml)
+        response = send_http_request(service_url, tropo_message.params)
         options[:filter_response] ? filter_response(response) : response
       end
 
       def delivery_request_successful?(gateway_response)
-        gateway_response =~ /\<success\>true\<\/success\>/
+        Rack::Utils.parse_query(
+          gateway_response
+        )["success"] == "true" ? true : nil
       end
 
       def message_id(data)
-        # this method is supposed to return nil
+        Rack::Utils.parse_query(data)["id"]
       end
 
       def message_text(params)
@@ -71,7 +74,9 @@ module ActionSms
         end
 
         def filter_response(raw_response)
-          raw_response.gsub(/\<token\>\w+\<\/token\>/, "")
+          raw_response_hash = Rack::Utils.parse_query(raw_response)
+          raw_response_hash.delete("token") if raw_response_hash["token"]
+          Rack::Utils.build_query(raw_response_hash)
         end
     end
   end
