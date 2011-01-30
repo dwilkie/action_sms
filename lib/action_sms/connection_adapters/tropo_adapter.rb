@@ -44,11 +44,17 @@ module ActionSms
       end
 
       def message_text(params)
-        session(params)["initial_text"]
+        begin
+          session(params)["initial_text"]
+        rescue
+        end
       end
 
       def sender(params)
-        session(params)["from"]["id"]
+        begin
+          session(params)["from"]["id"]
+        rescue
+        end
       end
 
       def service_url

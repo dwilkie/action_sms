@@ -134,8 +134,8 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
   end
 
   describe "#message_text" do
-    let (:request_params) { { "session" => {} } }
     context "given valid incoming message request params" do
+      let(:request_params) { { "session" => {} } }
       before do
         request_params["session"]["initial_text"] = "ANYTHING"
       end
@@ -144,6 +144,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       end
     end
     context "given invalid incoming message request params" do
+      let(:request_params) { {} }
       it "should return nil" do
         adapter.message_text(request_params).should be_nil
       end
@@ -151,8 +152,8 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
   end
 
   describe "#sender" do
-    let (:request_params) { {"session" => { "from" => {} }}}
     context "given valid incoming message request params" do
+      let(:request_params) { {"session" => { "from" => {} }}}
       before do
         request_params["session"]["from"]["id"] = "ANYTHING"
       end
@@ -161,6 +162,7 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
       end
     end
     context "given invalid incoming message request params" do
+      let(:request_params) { {} }
       it "should return nil" do
         adapter.sender(request_params).should be_nil
       end
