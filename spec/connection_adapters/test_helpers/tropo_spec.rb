@@ -57,13 +57,13 @@ describe ActionSms::ConnectionAdapters::TropoAdapter do
     describe "#sample_delivery_response" do
       context "with no options" do
         it "should return a successful delivery response" do
-          adapter.sample_delivery_response.should == "<session><success>true</success></session>"
+          adapter.sample_delivery_response.should == "success=true&token=abcde3214&id=9865abcde"
         end
       end
       context "with options" do
         context "'failed'" do
           it "should return a failed delivery response" do
-            adapter.sample_delivery_response(:failed => true).should == "<session><success>false</success><token></token><reason>FAILED TO ROUTE TOKEN</reason></session>"
+            adapter.sample_delivery_response(:failed => true).should == "success=false&token=abcde3214&reason=Invalid+token"
           end
         end
       end

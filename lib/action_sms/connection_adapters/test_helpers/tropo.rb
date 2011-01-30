@@ -15,7 +15,7 @@ module ActionSms
         end
 
         def sample_delivery_response(options = {})
-          options[:failed] ? "<session><success>false</success><token></token><reason>FAILED TO ROUTE TOKEN</reason></session>" : "<session><success>true</success></session>"
+          options[:failed] ? "success=false&token=abcde3214&reason=Invalid+token" : "success=true&token=abcde3214&id=9865abcde"
         end
 
         def sample_incoming_sms(options = {})
